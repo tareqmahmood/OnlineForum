@@ -11,14 +11,13 @@
 <!DOCTYPE html>
 <html>
 <%
-    System.out.println("Hello ");
-    String username = (String)session.getAttribute("username");
-    //System.out.println("Hello " + username);
-    if(username == null)
+    int user_id = 0;
+    if(session.getAttribute("user_id") == null)
     {
-        RequestDispatcher rd = request.getRequestDispatcher("start.html");
+        RequestDispatcher rd = request.getRequestDispatcher("start.jsp");
         rd.forward(request, response);
     }
+    user_id = (Integer) session.getAttribute("user_id");
 %>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">

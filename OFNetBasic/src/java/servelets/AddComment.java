@@ -5,18 +5,21 @@
  */
 package servelets;
 
+import db.DataAccess;
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author HP
  */
-public class ShowFavourite extends HttpServlet {
+public class AddComment extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -30,18 +33,17 @@ public class ShowFavourite extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ShowFavourite</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ShowFavourite at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        String content = request.getParameter("content");
+        int post_id = Integer.parseInt(request.getParameter("post_id"));
+        int user_id = (Integer) request.getSession().getAttribute("user_id");
+        DataAccess db = DataAccess.getDataAccess(request.getSession());
+        int count = db.addComment(post_id, user_id, content);
+        if(count > 0)
+        {
+             System.out.println("Successful addition of comment ");
         }
+        RequestDispatcher rd = request.getRequestDispatcher("post.jsp?post_id=" + post_id);
+        rd.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

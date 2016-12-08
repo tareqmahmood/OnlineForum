@@ -51,12 +51,14 @@ public final class home_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("\r\n");
       out.write("<html>\r\n");
 
-    String username = (String)session.getAttribute("username");
-    if(username == null)
+    int user_id = 0;
+    if(session.getAttribute("user_id") == null)
     {
-        RequestDispatcher rd = request.getRequestDispatcher("start.html");
+        RequestDispatcher rd = request.getRequestDispatcher("start.jsp");
         rd.forward(request, response);
     }
+    user_id = (Integer) session.getAttribute("user_id");
+    DataAccess db = DataAccess.getDataAccess(request.getSession());
 
       out.write("\r\n");
       out.write("<head>\r\n");
@@ -67,18 +69,17 @@ public final class home_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("<a href=\"recent.jsp\">recent</a> \r\n");
       out.write("<a href=\"ShowFavourite.do\">favorites</a> \r\n");
       out.write("<a href=\"Logout.do\">logout</a> </br>\r\n");
-      out.write("<p>\r\n");
 
-    out.print(String.format("<h2>Welcome %s</h2>", username));
+    out.print(String.format("<h2>Welcome %s</h2>", db.getUsername(user_id)));
 
       out.write("\r\n");
+      out.write("<p>\r\n");
       out.write("<form method=\"post\" action=\"AddPost.do\">\r\n");
       out.write("    Title <input type=\"text\" name=\"title\" /><br>\r\n");
-      out.write("    Type your thoughts </br>\r\n");
+      out.write("    Type your thoughts <br>\r\n");
       out.write("    <textarea name=\"content\" cols=\"40\" rows=\"5\"></textarea><br>\r\n");
       out.write("    ");
 
-        DataAccess db = DataAccess.getDataAccess(request.getSession());
         ArrayList<Category> categories = db.getAllCategories();
         for(Category ctg : categories)
         {

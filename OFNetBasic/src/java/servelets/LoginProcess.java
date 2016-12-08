@@ -48,7 +48,9 @@ public class LoginProcess extends HttpServlet {
         {
             System.out.println("Successful login of user " + username);
             HttpSession session = request.getSession();
-            session.setAttribute("username", username);
+            int user_id = db.getUserID(username);
+            session.setAttribute("user_id", new Integer(user_id));
+            
             RequestDispatcher rd = request.getRequestDispatcher("home.jsp");
             rd.forward(request, response);
         }

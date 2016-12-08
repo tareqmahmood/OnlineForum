@@ -5,12 +5,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <%
-    String username = (String)session.getAttribute("username");
-    if(username == null)
+    int user_id = 0;
+    if(session.getAttribute("user_id") == null)
     {
-        RequestDispatcher rd = request.getRequestDispatcher("start.html");
+        RequestDispatcher rd = request.getRequestDispatcher("start.jsp");
         rd.forward(request, response);
     }
+    user_id = (Integer) session.getAttribute("user_id");
+    DataAccess db = DataAccess.getDataAccess(request.getSession());
 %>
 <head>
     <title>Online Forum</title>
@@ -20,16 +22,15 @@
 <a href="recent.jsp">recent</a> 
 <a href="ShowFavourite.do">favorites</a> 
 <a href="Logout.do">logout</a> </br>
-<p>
 <%
-    out.print(String.format("<h2>Welcome %s</h2>", username));
+    out.print(String.format("<h2>Welcome %s</h2>", db.getUsername(user_id)));
 %>
+<p>
 <form method="post" action="AddPost.do">
     Title <input type="text" name="title" /><br>
-    Type your thoughts </br>
+    Type your thoughts <br>
     <textarea name="content" cols="40" rows="5"></textarea><br>
     <%
-        DataAccess db = DataAccess.getDataAccess(request.getSession());
         ArrayList<Category> categories = db.getAllCategories();
         for(Category ctg : categories)
         {

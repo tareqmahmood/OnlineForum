@@ -46,16 +46,16 @@ public final class start_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("\n");
       out.write("<!DOCTYPE html>\n");
       out.write("<html>\n");
-      out.write("<head>\n");
 
-    String username = (String)session.getAttribute("username");
-    if(username != null)
+    int user_id = 0;
+    if(session.getAttribute("user_id") != null)
     {
         RequestDispatcher rd = request.getRequestDispatcher("home.jsp");
         rd.forward(request, response);
     }
 
       out.write("\n");
+      out.write("<head>\n");
       out.write("    <title>Online Forum</title>\n");
       out.write("    <meta charset=\"UTF-8\">\n");
       out.write("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n");

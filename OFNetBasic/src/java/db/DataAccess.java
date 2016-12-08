@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import javax.servlet.http.HttpSession;
 import model.Category;
+import model.Comment;
 import model.Post;
 
 /**
@@ -127,11 +128,10 @@ public class DataAccess {
         }
     }
     
-    public int addPost(String username, String title, String content)
+    public int addPost(int user_id, String title, String content)
     {
         try
         {
-            int user_id = getUserID(username);
             String insertCommand = "insert into posts values(post_id_seq.nextval, ?, ?, SYSDATE, ?)";
             PreparedStatement stmt = conn.prepareStatement(insertCommand);
             stmt.setInt(1, user_id);
@@ -192,7 +192,7 @@ public class DataAccess {
     
    public ArrayList<Category> getAllCategories()
    {
-       ArrayList<Category> categories = new ArrayList();
+        ArrayList<Category> categories = new ArrayList();
         try
         {
             String query = "select * from category order by category_id asc";
@@ -209,7 +209,51 @@ public class DataAccess {
             e.printStackTrace();
             return null;
         }
-   }
+    }
+   
+   
+    public ArrayList<Comment> getComments(int post_id)
+    {
+        ArrayList<Comment> commentList = new ArrayList();
+        try
+        {
+            String query =  "select u.username, c.content, to_char(c.time, 'dd-mm-yyyy') || ' at ' || to_char(c.time, 'hh:mi am') time\n" +
+                            "from users u join comments c on u.user_id = c.user_id\n" +
+                            "where c.post_id = ? order by time asc";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, post_id);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next())
+            {
+                commentList.add(new Comment(rs.getString(1), rs.getString(2), rs.getString(3)));
+            }
+            return commentList;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+   
+    public int addComment(int post_id, int user_id, String content)
+    {
+        try
+        {
+            String insertCommand = "insert into comments values(comment_id_seq.nextval, ?, ?, ?, SYSDATE)";
+            PreparedStatement stmt = conn.prepareStatement(insertCommand);
+            stmt.setInt(1, post_id);
+            stmt.setInt(2, user_id);
+            stmt.setString(3, content);
+            int count = stmt.executeUpdate();
+            return count;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return 0;
+        }
+    }
 
     public void printAll()
     {

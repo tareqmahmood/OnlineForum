@@ -7,15 +7,15 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-<head>
 <%
-    String username = (String)session.getAttribute("username");
-    if(username != null)
+    int user_id = 0;
+    if(session.getAttribute("user_id") != null)
     {
         RequestDispatcher rd = request.getRequestDispatcher("home.jsp");
         rd.forward(request, response);
     }
 %>
+<head>
     <title>Online Forum</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

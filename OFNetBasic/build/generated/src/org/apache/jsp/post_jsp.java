@@ -4,10 +4,9 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.jsp.*;
 import model.Post;
-import java.util.ArrayList;
 import db.DataAccess;
 
-public final class recent_jsp extends org.apache.jasper.runtime.HttpJspBase
+public final class post_jsp extends org.apache.jasper.runtime.HttpJspBase
     implements org.apache.jasper.runtime.JspSourceDependent {
 
   private static final JspFactory _jspxFactory = JspFactory.getDefaultFactory();
@@ -49,43 +48,49 @@ public final class recent_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("\n");
       out.write("\n");
       out.write("\n");
-      out.write("\n");
       out.write("<!DOCTYPE html>\n");
       out.write("<html>\n");
 
-    int user_id = 0;
-    if(session.getAttribute("user_id") == null)
+    String username = (String)session.getAttribute("username");
+    //System.out.println("Hello " + username);
+    if(username == null)
     {
-        RequestDispatcher rd = request.getRequestDispatcher("start.jsp");
+        RequestDispatcher rd = request.getRequestDispatcher("start.html");
         rd.forward(request, response);
     }
-    user_id = (Integer) session.getAttribute("user_id");
+    int post_id = Integer.parseInt(request.getParameter("post_id"));
+    DataAccess db = DataAccess.getDataAccess(request.getSession());
+    Post post = db.getPost(post_id);
+    String postUser = DataAccess.getDataAccess(request.getSession()).getUsername(post.getUser_id());
 
       out.write("\n");
       out.write("    <head>\n");
       out.write("        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n");
-      out.write("        <title>Recent Posts</title>\n");
+      out.write("        ");
+
+            out.println("<title>" + post.getTitle() +"</title>"); 
+        
+      out.write("\n");
       out.write("    </head>\n");
       out.write("    <body>\n");
       out.write("        <a href=\"home.jsp\">home</a> \n");
       out.write("        <a href=\"recent.jsp\">recent</a> \n");
       out.write("        <a href=\"ShowFavourite.do\">favorites</a> \n");
       out.write("        <a href=\"Logout.do\">logout</a> </br>\n");
-      out.write("        <h2>Recent Posts</h2>\n");
-      out.write("        <p>\n");
-      out.write("        <ul>\n");
       out.write("        ");
 
-            DataAccess db = DataAccess.getDataAccess(request.getSession());
-            ArrayList<Post> posts = db.recentPosts();
-            for(Post p : posts)
-            {
-                String puser = DataAccess.getDataAccess(request.getSession()).getUsername(p.getUser_id());
-                out.println(String.format("<li> <a href = \"post.jsp?post_id=%s\">%s</a> by <b>%s</b> at %s </li>", p.getPost_id()+"", p.getTitle(), puser, p.getDatetime()));
-            }
+            out.println("<h1>" + post.getTitle() + "</h1>");
+            out.println("<h2> by <i>" + postUser + "</i></h2>");
+            out.println("<p>" + post.getContent() + "</p>");
         
       out.write("\n");
-      out.write("        </ul>\n");
+      out.write("        <h3>Comments</h3>\n");
+      out.write("        <p>\n");
+      out.write("            <form method=\"post\" action=\"AddComment.do\">\n");
+      out.write("                Add your comment<br>\n");
+      out.write("                <textarea name=\"content\" cols=\"40\" rows=\"2\"></textarea><br>\n");
+      out.write("                <input type=\"submit\" value=\"Comment\" />\n");
+      out.write("            </form>\n");
       out.write("        </p>\n");
       out.write("    </body>\n");
       out.write("</html>\n");
