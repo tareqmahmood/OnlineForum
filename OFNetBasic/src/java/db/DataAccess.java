@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 import model.Category;
 import model.Comment;
 import model.Post;
+import model.Vote;
 
 /**
  * Created on 10/28/2016.
@@ -254,22 +255,47 @@ public class DataAccess {
             return 0;
         }
     }
-
-    public void printAll()
+    
+    public void addVote(int post_id, int user_id, int vote)
     {
-        try {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("select * from users");
-            System.out.println("Successfully executed");
-            while(rs.next())
-            {
-                System.out.println(rs.getString(1) + " " + rs.getString(2));
-            }
-            conn.close();
+        try
+        {
+            String exeCommand = "begin add_post_vote(?, ?, ?); end;";
+            CallableStatement stmt = conn.prepareCall(exeCommand);
+            stmt.setInt(1, post_id);
+            stmt.setInt(2, user_id);
+            stmt.setInt(3, vote);
+            stmt.execute();
         }
-        catch (SQLException e) {
+        catch(Exception e)
+        {
             e.printStackTrace();
         }
-
+    }
+    
+    public Vote getVote(int post_id)
+    {
+        try
+        {
+            int upvote = 0, downvote = 0;
+            String query = "select count(vote) from post_votes where vote > 0 and post_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, post_id);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()) upvote = rs.getInt(1);
+            
+            query = "select count(vote) from post_votes where vote < 0 and post_id = ?";
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, post_id);
+            rs = stmt.executeQuery();
+            if(rs.next()) downvote = rs.getInt(1);
+            
+            return new Vote(upvote, downvote);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

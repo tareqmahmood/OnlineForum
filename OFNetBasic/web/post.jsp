@@ -4,6 +4,7 @@
     Author     : HP
 --%>
 
+<%@page import="model.Vote"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="model.Comment"%>
 <%@page import="model.Post"%>
@@ -41,11 +42,11 @@
             out.println("<h1>" + post.getTitle() + "</h1>");
             out.println("<h2> by <i>" + postUser + "</i></h2>");
             out.println("<p style=\"font-size:13pt\">" + post.getContent() + "</p>");
-            // this portion collects comments of this post from database, and list them
+            Vote vote = db.getVote(post_id);
         %>
         <form <% out.println(String.format("action=\"AddVote.do?post_id=%d\"", post_id)); %> method="post">
-            <input type="submit" value="Up Vote" name="1"/>
-            <input type="submit" value="Down Vote" name="0"/>
+            <input type="submit" value=<% out.println(String.format("\"Up Vote (%d)\"", vote.getUpvote())); %> name="upvote"/>
+            <input type="submit" value=<% out.println(String.format("\"Down Vote (%d)\"", vote.getDownvote())); %> name="downvote"/>
         </form>
         <h2>Comments</h2>
         
@@ -55,7 +56,6 @@
             {
                 out.println(String.format("<p> <span style=\"font-size:14pt\"><b> %s </b></span> <i>commented %s</i> <br><span style=\"margin-left: 0cm;font-size:13pt\"> %s </span> </p>", c.getUsername(), c.getTime(), c.getContent()));
             }
-            // this portion is to add new comments
         %>
         
         <p>

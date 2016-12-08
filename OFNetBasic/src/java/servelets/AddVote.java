@@ -32,15 +32,23 @@ public class AddVote extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String content = request.getParameter("content");
         int post_id = Integer.parseInt(request.getParameter("post_id"));
         int user_id = (Integer) request.getSession().getAttribute("user_id");
+        int vote = 0;
         DataAccess db = DataAccess.getDataAccess(request.getSession());
-        int count = db.addComment(post_id, user_id, content);
-        if(count > 0)
+        if(request.getParameter("upvote") != null)
         {
-             System.out.println("Successful addition of comment ");
+            System.out.println("User " + user_id + " on post " + post_id + " pressed upvote");
+            vote = 1;
+            db.addVote(post_id, user_id, vote);
         }
+        else if(request.getParameter("downvote") != null)
+        {
+            System.out.println("User " + user_id + " on post " + post_id + " pressed downvote");
+            vote = -1;
+            db.addVote(post_id, user_id, vote);
+        }
+        
         RequestDispatcher rd = request.getRequestDispatcher("post.jsp?post_id=" + post_id);
         rd.forward(request, response);
     }
