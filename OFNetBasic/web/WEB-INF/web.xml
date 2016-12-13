@@ -16,6 +16,10 @@
         <servlet-name>AddMessage</servlet-name>
         <servlet-class>servelets.AddMessage</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddFavourite</servlet-name>
+        <servlet-class>servelets.AddFavourite</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AddComment</servlet-name>
         <url-pattern>/AddComment.do</url-pattern>
@@ -63,6 +67,10 @@
     <servlet-mapping>
         <servlet-name>AddMessage</servlet-name>
         <url-pattern>/AddMessage.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddFavourite</servlet-name>
+        <url-pattern>/AddFavourite.do</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

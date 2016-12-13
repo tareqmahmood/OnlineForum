@@ -4,6 +4,7 @@
     Author     : HP
 --%>
 
+<%@page import="template.QuickLink"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="model.User"%>
 <%@page import="db.DataAccess"%>
@@ -23,14 +24,18 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Users</title>
     </head>
-    <h2>Users</h2>
     <body>
+    <% out.print(QuickLink.quicklinks); %>
+    <h2>Users</h2>
     <%
         DataAccess db = DataAccess.getDataAccess(request.getSession());
         ArrayList<User> userList = db.getUsers();
         for(User u : userList)
         {
-            out.println(String.format("<li>%s <a href=\"conversation.jsp?other_id=%d\">send message</a>", u.getUsername(), u.getUser_id()));
+            if(u.getUser_id() == user_id)
+                out.println(String.format("<li>%s ", u.getUsername()));
+            else
+                out.println(String.format("<li>%s <a href=\"conversation.jsp?other_id=%d\">send message</a>", u.getUsername(), u.getUser_id()));
         }
     %>
     </body>

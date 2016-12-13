@@ -3,6 +3,7 @@ package org.apache.jsp;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.jsp.*;
+import template.QuickLink;
 import java.util.ArrayList;
 import model.Category;
 import db.DataAccess;
@@ -49,6 +50,7 @@ public final class home_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("\r\n");
       out.write("\r\n");
       out.write("\r\n");
+      out.write("\r\n");
       out.write("<html>\r\n");
 
     int user_id = 0;
@@ -70,6 +72,7 @@ public final class home_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("<a href=\"ShowFavourite.do\">favorites</a> \r\n");
       out.write("<a href=\"Logout.do\">logout</a> </br>\r\n");
 
+    out.print(QuickLink.quicklinks);
     out.print(String.format("<h2>Welcome %s</h2>", db.getUsername(user_id)));
 
       out.write("\r\n");

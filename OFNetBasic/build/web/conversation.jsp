@@ -4,6 +4,7 @@
     Author     : HP
 --%>
 
+<%@page import="template.QuickLink"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="model.Message"%>
 <%@page import="db.DataAccess"%>
@@ -35,6 +36,7 @@ p.lf {
     </head>
     <body>
         <%
+            out.print(QuickLink.quicklinks);
             int other_id = Integer.parseInt(request.getParameter("other_id"));
             DataAccess db = DataAccess.getDataAccess(request.getSession());
             ArrayList<Message> messageList = db.getMessages(user_id, other_id);

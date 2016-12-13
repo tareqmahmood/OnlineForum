@@ -4,6 +4,7 @@
     Author     : HP
 --%>
 
+<%@page import="template.QuickLink"%>
 <%@page import="model.Post"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="db.DataAccess"%>
@@ -24,10 +25,7 @@
         <title>Recent Posts</title>
     </head>
     <body>
-        <a href="home.jsp">home</a> 
-        <a href="recent.jsp">recent</a> 
-        <a href="ShowFavourite.do">favorites</a> 
-        <a href="Logout.do">logout</a> </br>
+        <% out.print(QuickLink.quicklinks); %>
         <h2>Recent Posts</h2>
         <p>
         <ul>

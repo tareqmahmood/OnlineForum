@@ -1,4 +1,5 @@
 
+<%@page import="template.QuickLink"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="model.Category"%>
 <%@page import="db.DataAccess"%>
@@ -18,11 +19,8 @@
     <title>Online Forum</title>
 </head>
 <body>
-<a href="home.jsp">home</a> 
-<a href="recent.jsp">recent</a> 
-<a href="ShowFavourite.do">favorites</a> 
-<a href="Logout.do">logout</a> </br>
 <%
+    out.print(QuickLink.quicklinks);
     out.print(String.format("<h2>Welcome %s</h2>", db.getUsername(user_id)));
 %>
 <p>

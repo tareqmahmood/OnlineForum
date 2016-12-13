@@ -4,6 +4,7 @@
     Author     : HP
 --%>
 
+<%@page import="template.QuickLink"%>
 <%@page import="model.Vote"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="model.Comment"%>
@@ -34,11 +35,8 @@
         %>
     </head>
     <body>
-        <a href="home.jsp">home</a> 
-        <a href="recent.jsp">recent</a> 
-        <a href="ShowFavourite.do">favorites</a> 
-        <a href="Logout.do">logout</a> </br>
         <%
+            out.print(QuickLink.quicklinks);
             out.println("<h1>" + post.getTitle() + "</h1>");
             out.println("<h2> by <i>" + postUser + "</i></h2>");
             out.println("<p style=\"font-size:13pt\">" + post.getContent() + "</p>");

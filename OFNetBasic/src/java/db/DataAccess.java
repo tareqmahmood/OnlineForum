@@ -368,4 +368,51 @@ public class DataAccess {
             return null;
         }
     }
+    
+    
+    public int addCategory(int user_id , int category_id)
+    {
+        try
+        {
+            System.out.println(user_id + " " + category_id);
+            String insertCommand = "insert into favourites values(? , ?)";
+            PreparedStatement stmt = conn.prepareStatement(insertCommand);
+            stmt.setInt(1, user_id);
+            stmt.setInt(2, category_id);
+            
+            //stmt.setString(3, title);
+            int count = stmt.executeUpdate();
+            return count;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+   public ArrayList<String> getFavouriteCategories(int user_id)
+   {
+       ArrayList<String> favouriteCategories = new ArrayList();
+        try
+        {
+            String query =  "select c.category_name " + 
+                            "from favourites f, category c " +
+                            "where f.user_id = ? and f.category_id = c.category_id";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            System.out.println("OFDebug : " + user_id);
+            stmt.setInt(1, user_id);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next())
+            {
+                favouriteCategories.add(rs.getString(1));
+            }
+            return favouriteCategories;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return favouriteCategories;
+        }
+   }
 }
