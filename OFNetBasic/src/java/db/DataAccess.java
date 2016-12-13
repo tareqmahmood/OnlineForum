@@ -346,7 +346,7 @@ public class DataAccess {
         ArrayList<Message> messageList = new ArrayList();
         try
         {
-            String query =  "select u.username, to_char(m.time, 'dd-mm-yyyy') || ' at ' || to_char(m.time, 'hh:mi am') time, m.content\n" +
+            String query =  "select u.user_id, u.username, to_char(m.time, 'dd-mm-yyyy') || ' at ' || to_char(m.time, 'hh:mi am') time, m.content\n" +
                             "from users u join messages m on u.user_id = m.sender_id\n" +
                             "where (m.sender_id = ? and m.receiver_id = ?) or (m.sender_id = ? and m.receiver_id = ?)\n" +
                             "order by time";
@@ -358,7 +358,7 @@ public class DataAccess {
             ResultSet rs = stmt.executeQuery();
             while(rs.next())
             {
-                messageList.add(new Message(rs.getString(1), rs.getString(2), rs.getString(3)));
+                messageList.add(new Message(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4)));
             }
             return messageList;
         }

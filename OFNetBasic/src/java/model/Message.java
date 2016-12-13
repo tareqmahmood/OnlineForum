@@ -13,8 +13,10 @@ public class Message {
     private String username;
     private String datetime;
     private String content;
+    private int user_id;
 
-    public Message(String username, String datetime, String content) {
+    public Message(int user_id, String username, String datetime, String content) {
+        this.user_id = user_id;
         this.username = username;
         this.datetime = datetime;
         this.content = content;
@@ -31,6 +33,8 @@ public class Message {
     public String getContent() {
         return content;
     }
-    
-    
+
+    public int getUser_id() {
+        return user_id;
+    }
 }

@@ -10,6 +10,16 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
+<style>
+p.rt {
+    width: 400px;
+    text-align: right;
+}
+p.lf {
+    width: 400px;
+    text-align: left;
+}
+</style>
 <%
     int user_id = 0;
     if(session.getAttribute("user_id") == null)
@@ -30,11 +40,14 @@
             ArrayList<Message> messageList = db.getMessages(user_id, other_id);
             for(Message m : messageList)
             {
-                out.println(String.format("<p><span style='font-size:14pt'><b>%s</b></span> : <span style='font-size:10pt'><i>%s</i></span><br>%s</p>", m.getUsername(), m.getDatetime(), m.getContent()));
+                if(m.getUser_id() == user_id)
+                    out.println(String.format("<p class='rt'><span style='font-size:14pt'><b>%s</b></span> : <span style='font-size:10pt'><i>%s</i></span><br>%s</p>", m.getUsername(), m.getDatetime(), m.getContent()));
+                else
+                    out.println(String.format("<p class='lf'><span style='font-size:14pt'><b>%s</b></span> : <span style='font-size:10pt'><i>%s</i></span><br>%s</p>", m.getUsername(), m.getDatetime(), m.getContent()));
             }
         %>
     <form method="post" action=<% out.println(String.format("AddMessage.do?other_id=%d", other_id)); %> >
-        <textarea name="content" cols="30" rows="2"></textarea><br>
+        <textarea name="content" cols="52" rows="2"></textarea><br>
         <input type="submit" value="Send" />
     </form>
     </body>
