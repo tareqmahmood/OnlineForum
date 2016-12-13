@@ -1,10 +1,19 @@
 <html>
 <head>
-<title>Test</title>
+    <script type="text/javascript">
+        function addTextArea(){
+            var div = document.getElementById('div_quotes');
+            div.innerHTML += "<textarea name='new_quote[]' />";
+            div.innerHTML += "\n<br />";
+        }
+    </script>
 </head>
 <body>
-<div style="margin-left: 2cm;">
-your text here
-</div>
+<form method="post">
+<input type="text" name="text_new_author" /><br />
+<div id="div_quotes"></div>
+<input type="button" value="Add Text Area" onClick="addTextArea();">
+<input type="submit" name="submitted">
+</form>
 </body>
 </html>

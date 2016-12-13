@@ -3,10 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Academic/Database%20Lab/Online%20Forum/Projects/OFNetBasic/web/start.jsp</file>
-            <file>file:/D:/Academic/Database%20Lab/Online%20Forum/Projects/OFNetBasic/web/post.jsp</file>
-            <file>file:/D:/Academic/Database%20Lab/Online%20Forum/Projects/OFNetBasic/web/recent.jsp</file>
-            <file>file:/D:/Academic/Database%20Lab/Online%20Forum/Projects/OFNetBasic/web/home.jsp</file>
+            <file>file:/D:/Academic/Database%20Lab/Online%20Forum/Projects/OFNetBasic/src/java/servelets/AddPost.java</file>
+            <file>file:/D:/Academic/Database%20Lab/Online%20Forum/Projects/OFNetBasic/src/java/db/DataAccess.java</file>
+            <file>file:/D:/Academic/Database%20Lab/Online%20Forum/Projects/OFNetBasic/web/conversation.jsp</file>
+            <file>file:/D:/Academic/Database%20Lab/Online%20Forum/Projects/OFNetBasic/src/java/servelets/AddMessage.java</file>
+            <file>file:/D:/Academic/Database%20Lab/Online%20Forum/Projects/OFNetBasic/src/java/model/Message.java</file>
+            <file>file:/D:/Academic/Database%20Lab/Online%20Forum/Projects/OFNetBasic/web/users.jsp</file>
         </group>
     </open-files>
 </project-private>

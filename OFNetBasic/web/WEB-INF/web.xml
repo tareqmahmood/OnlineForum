@@ -8,6 +8,14 @@
         <servlet-name>AddVote</servlet-name>
         <servlet-class>servelets.AddVote</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddReply</servlet-name>
+        <servlet-class>servelets.AddReply</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddMessage</servlet-name>
+        <servlet-class>servelets.AddMessage</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AddComment</servlet-name>
         <url-pattern>/AddComment.do</url-pattern>
@@ -47,6 +55,14 @@
     <servlet-mapping>
         <servlet-name>AddVote</servlet-name>
         <url-pattern>/AddVote.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddReply</servlet-name>
+        <url-pattern>/AddReply.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddMessage</servlet-name>
+        <url-pattern>/AddMessage.do</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

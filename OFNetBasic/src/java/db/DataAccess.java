@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import javax.servlet.http.HttpSession;
 import model.Category;
 import model.Comment;
+import model.Message;
 import model.Post;
+import model.User;
 import model.Vote;
 
 /**
@@ -42,6 +44,27 @@ public class DataAccess {
             session.setAttribute("db", dataAccess);
         }
         return dataAccess;
+    }
+    
+    public ArrayList<User> getUsers()
+    {
+        ArrayList<User> userList = new ArrayList();
+        try
+        {
+            String query =  "select username, user_id from users";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next())
+            {
+                userList.add(new User(rs.getString(1), rs.getInt(2)));
+            }
+            return userList;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public boolean existUser(String username, String password)
@@ -291,6 +314,53 @@ public class DataAccess {
             if(rs.next()) downvote = rs.getInt(1);
             
             return new Vote(upvote, downvote);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    public int addMessage(int sender_id, int receiver_id, String content)
+    {
+        try
+        {
+            String insertCommand = "insert into messages values(message_id_seq.nextval, ?, ?, ?, SYSDATE)";
+            PreparedStatement stmt = conn.prepareStatement(insertCommand);
+            stmt.setInt(1, sender_id);
+            stmt.setInt(2, receiver_id);
+            stmt.setString(3, content);
+            int count = stmt.executeUpdate();
+            return count;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+    
+    public ArrayList<Message> getMessages(int user_id, int other_id)
+    {
+        ArrayList<Message> messageList = new ArrayList();
+        try
+        {
+            String query =  "select u.username, to_char(m.time, 'dd-mm-yyyy') || ' at ' || to_char(m.time, 'hh:mi am') time, m.content\n" +
+                            "from users u join messages m on u.user_id = m.sender_id\n" +
+                            "where (m.sender_id = ? and m.receiver_id = ?) or (m.sender_id = ? and m.receiver_id = ?)\n" +
+                            "order by time";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, user_id);
+            stmt.setInt(2, other_id);
+            stmt.setInt(3, other_id);
+            stmt.setInt(4, user_id);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next())
+            {
+                messageList.add(new Message(rs.getString(1), rs.getString(2), rs.getString(3)));
+            }
+            return messageList;
         }
         catch(Exception e)
         {
