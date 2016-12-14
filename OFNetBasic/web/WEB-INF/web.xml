@@ -20,6 +20,15 @@
         <servlet-name>AddFavourite</servlet-name>
         <servlet-class>servelets.AddFavourite</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddFile</servlet-name>
+        <servlet-class>servelets.AddFile</servlet-class>
+        <multipart-config>
+            <max-file-size>10485760</max-file-size>
+            <max-request-size>20971520</max-request-size>
+            <file-size-threshold>5242880</file-size-threshold>
+        </multipart-config>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AddComment</servlet-name>
         <url-pattern>/AddComment.do</url-pattern>
@@ -71,6 +80,10 @@
     <servlet-mapping>
         <servlet-name>AddFavourite</servlet-name>
         <url-pattern>/AddFavourite.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddFile</servlet-name>
+        <url-pattern>/AddFile.do</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

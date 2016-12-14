@@ -23,20 +23,5 @@
     out.print(QuickLink.quicklinks);
     out.print(String.format("<h2>Welcome %s</h2>", db.getUsername(user_id)));
 %>
-<p>
-<form method="post" action="AddPost.do">
-    Title <input type="text" name="title" /><br>
-    Type your thoughts <br>
-    <textarea name="content" cols="40" rows="5"></textarea><br>
-    <%
-        ArrayList<Category> categories = db.getAllCategories();
-        for(Category ctg : categories)
-        {
-            out.println(String.format("<input type=\"checkbox\" name=\"category\" value=\"%d\"> %s<br>", ctg.getCategory_id(), ctg.getCategory_name()));
-        }
-    %>
-    <input type="submit" value="Post" />
-</form>
-</p>
 </body>
 </html>

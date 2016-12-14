@@ -1,10 +1,12 @@
 package db;
 
+import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import javax.servlet.http.HttpSession;
 import model.Category;
 import model.Comment;
+import model.File;
 import model.Message;
 import model.Post;
 import model.User;
@@ -243,7 +245,7 @@ public class DataAccess {
         {
             String query =  "select u.username, c.content, to_char(c.time, 'dd-mm-yyyy') || ' at ' || to_char(c.time, 'hh:mi am') time\n" +
                             "from users u join comments c on u.user_id = c.user_id\n" +
-                            "where c.post_id = ? order by time asc";
+                            "where c.post_id = ? order by c.time asc";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, post_id);
             ResultSet rs = stmt.executeQuery();
@@ -349,7 +351,7 @@ public class DataAccess {
             String query =  "select u.user_id, u.username, to_char(m.time, 'dd-mm-yyyy') || ' at ' || to_char(m.time, 'hh:mi am') time, m.content\n" +
                             "from users u join messages m on u.user_id = m.sender_id\n" +
                             "where (m.sender_id = ? and m.receiver_id = ?) or (m.sender_id = ? and m.receiver_id = ?)\n" +
-                            "order by time";
+                            "order by m.time";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, user_id);
             stmt.setInt(2, other_id);
@@ -391,9 +393,9 @@ public class DataAccess {
         }
     }
 
-   public ArrayList<String> getFavouriteCategories(int user_id)
-   {
-       ArrayList<String> favouriteCategories = new ArrayList();
+    public ArrayList<String> getFavouriteCategories(int user_id)
+    {
+        ArrayList<String> favouriteCategories = new ArrayList();
         try
         {
             String query =  "select c.category_name " + 
@@ -414,5 +416,52 @@ public class DataAccess {
             e.printStackTrace();
             return favouriteCategories;
         }
-   }
+    }
+    
+    
+    
+    public int addFile(int user_id, String filename, int filesize, InputStream inputStream)
+    {
+        if(filesize > 1000000000) return 0;
+        if(inputStream == null) return 0;
+        try
+        {
+            String insertCommand = "insert into files values(file_id_seq.nextval, ?, ?, ?, ?)";
+            PreparedStatement stmt = conn.prepareStatement(insertCommand);
+            stmt.setInt(1, user_id);
+            stmt.setString(2, filename);
+            stmt.setInt(3, filesize);
+            stmt.setBlob(4, inputStream);
+            int count = stmt.executeUpdate();
+            return count;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+    
+    
+    public ArrayList<File> getFiles(int user_id)
+    {
+        ArrayList<File> fileList = new ArrayList();
+        try
+        {
+            String query =  "select file_id, filename, filesize from files where user_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, user_id);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next())
+            {
+                fileList.add(new File(rs.getInt(1), rs.getString(2), rs.getInt(3)));
+            }
+            return fileList;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return fileList;
+        }
+    }
 }

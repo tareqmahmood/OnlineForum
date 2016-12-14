@@ -15,5 +15,6 @@ public class QuickLink {
     "<span style=\"padding-right: 20px\"><a href=\"recent.jsp\">recent posts</a></span>\n" +
     "<span style=\"padding-right: 20px\"><a href=\"managefavourites.jsp\">manage favourites</a></span>\n" +
     "<span style=\"padding-right: 20px\"><a href=\"users.jsp\">users</a></span>\n" +
+    "<span style=\"padding-right: 20px\"><a href=\"file.jsp\">manage files</a></span>\n" +
     "<span style=\"padding-right: 20px\"><a href=\"Logout.do\">logout</a></span> </br>";
 }
