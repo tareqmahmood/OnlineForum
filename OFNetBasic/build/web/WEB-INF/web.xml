@@ -29,6 +29,14 @@
             <file-size-threshold>5242880</file-size-threshold>
         </multipart-config>
     </servlet>
+    <servlet>
+        <servlet-name>DeleteFile</servlet-name>
+        <servlet-class>servelets.DeleteFile</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DownloadFile</servlet-name>
+        <servlet-class>servelets.DownloadFile</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AddComment</servlet-name>
         <url-pattern>/AddComment.do</url-pattern>
@@ -85,9 +93,17 @@
         <servlet-name>AddFile</servlet-name>
         <url-pattern>/AddFile.do</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteFile</servlet-name>
+        <url-pattern>/DeleteFile.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DownloadFile</servlet-name>
+        <url-pattern>/DownloadFile.do</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
-            30
+            60
         </session-timeout>
     </session-config>
 </web-app>

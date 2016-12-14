@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javax.servlet.http.HttpSession;
 import model.Category;
 import model.Comment;
+import model.DFile;
 import model.File;
 import model.Message;
 import model.Post;
@@ -462,6 +463,44 @@ public class DataAccess {
         {
             e.printStackTrace();
             return fileList;
+        }
+    }
+    
+    public DFile downloadFile(int file_id)
+    {
+        try
+        {
+            String query =  "select filename, file_data from files where file_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, file_id);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next())
+            {
+                return new DFile(rs.getString(1), rs.getBlob(2));
+            }
+            return null;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    public int deleteFile(int file_id)
+    {
+        try
+        {
+            String deleteCommand = "delete files where file_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(deleteCommand);
+            stmt.setInt(1, file_id);
+            int count = stmt.executeUpdate();
+            return count;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return 0;
         }
     }
 }

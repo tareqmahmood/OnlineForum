@@ -3,6 +3,8 @@ package org.apache.jsp;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.jsp.*;
+import java.util.ArrayList;
+import model.File;
 import template.QuickLink;
 import db.DataAccess;
 
@@ -48,6 +50,8 @@ public final class file_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("\n");
       out.write("\n");
       out.write("\n");
+      out.write("\n");
+      out.write("\n");
       out.write("<!DOCTYPE html>\n");
       out.write("<html>\n");
       out.write("    <head>\n");
@@ -72,7 +76,20 @@ public final class file_jsp extends org.apache.jasper.runtime.HttpJspBase
     
       out.write("\n");
       out.write("    <h2>Your Files</h2>\n");
+      out.write("    <table cellspacing=\"10\">\n");
+      out.write("    ");
+
+        
+        ArrayList<File> fileList = db.getFiles(user_id);
+        for(File f : fileList)
+        {
+            out.println(String.format("<tr><td> %s </td> <td> %s </td> <td><a href='DownloadFile.do?file_id=%d'>Download</a></td> <td><a href='DeleteFile.do?file_id=%d'>Delete</a></td></tr>", f.getFilename(), f.getNormalizedFilesize(), f.getFile_id(), f.getFile_id()));
+        }
+    
+      out.write("\n");
+      out.write("    </table>\n");
       out.write("    <h2>Upload File</h2>\n");
+      out.write("    <i>Careful: File size has to be under 95 MB</i><br>\n");
       out.write("    <form action=\"AddFile.do\" method=\"post\" enctype=\"multipart/form-data\">\n");
       out.write("        <p><input type=\"file\" name=\"file\" size=\"40\"/></p><br>\n");
       out.write("        <input type=\"submit\" value=\"Upload\" />\n");
