@@ -179,7 +179,8 @@ public class DataAccess {
         ArrayList<Post> posts = new ArrayList();
         try
         {
-            String query = "select * from posts order by time desc";
+            String query =  "select post_id, user_id, content, to_char(time, 'dd-mm-yyyy') || ' at ' || to_char(time, 'hh:mi am') datetime, title "
+                            + "from posts order by time desc";
             PreparedStatement stmt = conn.prepareStatement(query);
             ResultSet rs = stmt.executeQuery();
             while(rs.next())
@@ -199,7 +200,8 @@ public class DataAccess {
     {
         try
         {
-            String query = "select * from posts where post_id = ?";
+            String query =  "select post_id, user_id, content, to_char(time, 'dd-mm-yyyy') || ' at ' || to_char(time, 'hh:mi am') datetime, title \n" +
+                            "from posts where post_id = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, post_id);
             ResultSet rs = stmt.executeQuery();
@@ -565,6 +567,61 @@ public class DataAccess {
         {
             e.printStackTrace();
             return null;
+        }
+    }
+    
+    public boolean isAdmin(int user_id)
+    {
+        try
+        {
+            String query = "select role from users where user_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, user_id);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next())
+            {
+                return rs.getString(1).equals("admin");
+            }
+            return false;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public int deleteUser(int delete_id)
+    {
+        try
+        {
+            String deleteCommand = "delete users where user_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(deleteCommand);
+            stmt.setInt(1, delete_id);
+            int count = stmt.executeUpdate();
+            return count;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+    
+    public int deletePost(int post_id)
+    {
+        try
+        {
+            String deleteCommand = "delete posts where post_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(deleteCommand);
+            stmt.setInt(1, post_id);
+            int count = stmt.executeUpdate();
+            return count;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return 0;
         }
     }
 }

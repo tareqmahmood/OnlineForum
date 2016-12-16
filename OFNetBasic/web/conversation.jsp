@@ -40,6 +40,7 @@ p.lf {
             int other_id = Integer.parseInt(request.getParameter("other_id"));
             DataAccess db = DataAccess.getDataAccess(request.getSession());
             ArrayList<Message> messageList = db.getMessages(user_id, other_id);
+            out.println(String.format("<p><a href='conversation.jsp?other_id=%d'>Refresh</a><br><p>", other_id));
             for(Message m : messageList)
             {
                 if(m.getUser_id() == user_id)

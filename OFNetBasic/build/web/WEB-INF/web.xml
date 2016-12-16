@@ -37,6 +37,14 @@
         <servlet-name>DownloadFile</servlet-name>
         <servlet-class>servelets.DownloadFile</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DeleteUser</servlet-name>
+        <servlet-class>servelets.DeleteUser</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeletePost</servlet-name>
+        <servlet-class>servelets.DeletePost</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AddComment</servlet-name>
         <url-pattern>/AddComment.do</url-pattern>
@@ -100,6 +108,14 @@
     <servlet-mapping>
         <servlet-name>DownloadFile</servlet-name>
         <url-pattern>/DownloadFile.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteUser</servlet-name>
+        <url-pattern>/DeleteUser.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeletePost</servlet-name>
+        <url-pattern>/DeletePost.do</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

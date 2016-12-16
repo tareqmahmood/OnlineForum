@@ -28,19 +28,26 @@
     <body>
         <% out.print(QuickLink.quicklinks); %>
         <h2>Recent Posts</h2>
-        <p>
-        <ul>
+        <table>
         <%
             DataAccess db = DataAccess.getDataAccess(request.getSession());
+            boolean isAdmin = db.isAdmin(user_id);
             ArrayList<Post> posts = db.recentPosts();
             for(Post p : posts)
             {
                 String puser = DataAccess.getDataAccess(request.getSession()).getUsername(p.getUser_id());
-                out.println(String.format("<li> <a href = \"post.jsp?post_id=%s\">%s</a> by <b>%s</b> at %s </li>", p.getPost_id()+"", p.getTitle(), puser, p.getDatetime()));
+                if(p.getUser_id() == user_id || isAdmin)
+                    out.println(String.format("<tr> <td><a href = 'post.jsp?post_id=%d'>%s</a></td> "
+                            + "<td>by <b>%s</b></td><td> on %s</td>"
+                            + "<td><a href='DeletePost.do?post_id=%d' style='padding-left:2em'>Delete Post</a></td>"
+                            + "</tr>", p.getPost_id(), p.getTitle(), puser, p.getDatetime(), p.getPost_id()));
+                else
+                    out.println(String.format("<tr><td><a href = 'post.jsp?post_id=%s'>%s</a></td>"
+                            + "<td>by <b>%s</b></td><td> on %s</td>"
+                            + "</tr>", p.getPost_id()+"", p.getTitle(), puser, p.getDatetime()));
             }
         %>
-        </ul>
-        </p>
+        </table>
         <h3>Filter by category</h3>
         <% out.print(Hierarchy.getString(session)); %>
     </body>

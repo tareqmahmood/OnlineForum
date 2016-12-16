@@ -51,6 +51,7 @@
             out.print(QuickLink.quicklinks);
             out.println("<h1>" + post.getTitle() + "</h1>");
             out.println("<h2> by <i>" + postUser + "</i></h2>");
+            out.println("<i>" + post.getDatetime() + "</i><br>");
             out.println("<p style=\"font-size:13pt\">" + post.getContent() + "</p>");
             Vote vote = db.getVote(post_id);
         %>

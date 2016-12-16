@@ -27,16 +27,26 @@
     <body>
     <% out.print(QuickLink.quicklinks); %>
     <h2>Users</h2>
+    <table cellspacing="10">
     <%
         DataAccess db = DataAccess.getDataAccess(request.getSession());
+        boolean isAdmin = db.isAdmin(user_id);
         ArrayList<User> userList = db.getUsers();
         for(User u : userList)
         {
             if(u.getUser_id() == user_id)
-                out.println(String.format("<li>%s ", u.getUsername()));
+                out.println(String.format("<tr><td>%s</td></tr>", u.getUsername()));
+            else if(isAdmin)
+                out.println(String.format("<tr><td>%s</td>"
+                        + "<td></td><td><a href='conversation.jsp?other_id=%d'>Chat</a></td>"
+                        + "<td></td><td><a href='DeleteUser.do?delete_id=%d'>Delete User</a></td>"
+                        + "</tr>", u.getUsername(), u.getUser_id(), u.getUser_id()));
             else
-                out.println(String.format("<li>%s <a href=\"conversation.jsp?other_id=%d\">send message</a>", u.getUsername(), u.getUser_id()));
+                out.println(String.format("<tr><td>%s</td>"
+                        + "<td></td><td><a href='conversation.jsp?other_id=%d'>Chat</a></td>"
+                        + "</tr>", u.getUsername(), u.getUser_id()));
         }
     %>
+    </table>
     </body>
 </html>
