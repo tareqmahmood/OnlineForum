@@ -244,15 +244,41 @@ public class DataAccess {
         ArrayList<Comment> commentList = new ArrayList();
         try
         {
-            String query =  "select u.username, c.content, to_char(c.time, 'dd-mm-yyyy') || ' at ' || to_char(c.time, 'hh:mi am') time\n" +
+            String query =  "select u.username, c.content, to_char(c.time, 'dd-mm-yyyy') || ' at ' || to_char(c.time, 'hh:mi am') time, c.comment_id\n" +
                             "from users u join comments c on u.user_id = c.user_id\n" +
-                            "where c.post_id = ? order by c.time asc";
+                            "join post_comment pc on pc.comment_id = c.comment_id\n" +
+                            "where pc.post_id = ? order by c.time asc";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, post_id);
             ResultSet rs = stmt.executeQuery();
             while(rs.next())
             {
-                commentList.add(new Comment(rs.getString(1), rs.getString(2), rs.getString(3)));
+                commentList.add(new Comment(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
+            }
+            return commentList;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    public ArrayList<Comment> getReplies(int comment_id)
+    {
+        ArrayList<Comment> commentList = new ArrayList();
+        try
+        {
+            String query =  "select u.username, c.content, to_char(c.time, 'dd-mm-yyyy') || ' at ' || to_char(c.time, 'hh:mi am') time, c.comment_id\n" +
+                            "from users u join comments c on u.user_id = c.user_id\n" +
+                            "join comment_reply cr on c.comment_id = cr.reply_id\n" +
+                            "where cr.comment_id = ? order by c.time asc";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, comment_id);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next())
+            {
+                commentList.add(new Comment(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
             }
             return commentList;
         }
@@ -263,22 +289,37 @@ public class DataAccess {
         }
     }
    
-    public int addComment(int post_id, int user_id, String content)
+    public void addComment(int post_id, int user_id, String content)
     {
         try
         {
-            String insertCommand = "insert into comments values(comment_id_seq.nextval, ?, ?, ?, SYSDATE)";
-            PreparedStatement stmt = conn.prepareStatement(insertCommand);
+            String exeCommand = "begin add_post_comment(?, ?, ?); end;";
+            CallableStatement stmt = conn.prepareCall(exeCommand);
             stmt.setInt(1, post_id);
             stmt.setInt(2, user_id);
             stmt.setString(3, content);
-            int count = stmt.executeUpdate();
-            return count;
+            stmt.execute();
         }
         catch(Exception e)
         {
             e.printStackTrace();
-            return 0;
+        }
+    }
+    
+    public void addReply(int comment_id, int user_id, String content)
+    {
+        try
+        {
+            String exeCommand = "begin add_comment_reply(?, ?, ?); end;";
+            CallableStatement stmt = conn.prepareCall(exeCommand);
+            stmt.setInt(1, comment_id);
+            stmt.setInt(2, user_id);
+            stmt.setString(3, content);
+            stmt.execute();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
         }
     }
     
@@ -501,6 +542,29 @@ public class DataAccess {
         {
             e.printStackTrace();
             return 0;
+        }
+    }
+    
+    
+    public ArrayList<Category> getChildCategories(int category_id)
+   {
+        ArrayList<Category> categories = new ArrayList();
+        try
+        {
+            String query = "select * from category where parent_category = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, category_id);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next())
+            {
+                categories.add(new Category(rs.getInt(1), rs.getInt(2), rs.getString(3)));
+            }
+            return categories;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return null;
         }
     }
 }

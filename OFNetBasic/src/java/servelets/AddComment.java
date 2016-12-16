@@ -37,11 +37,7 @@ public class AddComment extends HttpServlet {
         int post_id = Integer.parseInt(request.getParameter("post_id"));
         int user_id = (Integer) request.getSession().getAttribute("user_id");
         DataAccess db = DataAccess.getDataAccess(request.getSession());
-        int count = db.addComment(post_id, user_id, content);
-        if(count > 0)
-        {
-             System.out.println("Successful addition of comment ");
-        }
+        db.addComment(post_id, user_id, content);
         RequestDispatcher rd = request.getRequestDispatcher("post.jsp?post_id=" + post_id);
         rd.forward(request, response);
     }

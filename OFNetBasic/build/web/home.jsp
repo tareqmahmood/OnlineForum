@@ -1,4 +1,5 @@
 
+<%@page import="template.Hierarchy"%>
 <%@page import="template.QuickLink"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="model.Category"%>
@@ -22,6 +23,7 @@
 <%
     out.print(QuickLink.quicklinks);
     out.print(String.format("<h2>Welcome %s</h2>", db.getUsername(user_id)));
+    
 %>
 </body>
 </html>

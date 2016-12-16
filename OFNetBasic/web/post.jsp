@@ -4,6 +4,7 @@
     Author     : HP
 --%>
 
+<%@page import="template.IndentedComment"%>
 <%@page import="template.QuickLink"%>
 <%@page import="model.Vote"%>
 <%@page import="java.util.ArrayList"%>
@@ -29,6 +30,17 @@
     String postUser = db.getUsername(post.getUser_id());
 %>
     <head>
+        <script type="text/javascript">
+        function addTextArea(comment_id)
+        {
+            var post_id = "<%out.print(post_id);%>";
+            var div = document.getElementById('' + comment_id);            
+            div.innerHTML = '<form id="replyform" action="AddReply.do?post_id=' + post_id + '&comment_id=' + comment_id + '" method="post">'
+                            +'<textarea name="content" cols="38" rows="2">'
+                            +'</textarea><br><input type="submit" value="Submit"/>'
+                            +'</form>';
+        }
+        </script>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <%
             out.println("<title>" + post.getTitle() +"</title>"); 
@@ -52,7 +64,7 @@
             ArrayList<Comment> commentList = db.getComments(post_id);
             for(Comment c : commentList)
             {
-                out.println(String.format("<p> <span style=\"font-size:14pt\"><b> %s </b></span> <i>commented %s</i> <br><span style=\"margin-left: 0cm;font-size:13pt\"> %s </span> </p>", c.getUsername(), c.getTime(), c.getContent()));
+                IndentedComment.print(c, out, session);
             }
         %>
         

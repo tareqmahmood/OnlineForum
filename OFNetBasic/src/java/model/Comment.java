@@ -13,12 +13,7 @@ public class Comment {
     private String username;
     private String content;
     private String time;
-
-    public Comment(String username, String content, String time) {
-        this.username = username;
-        this.content = content;
-        this.time = time;
-    }
+    private int comment_id;
 
     public String getUsername() {
         return username;
@@ -31,4 +26,17 @@ public class Comment {
     public String getTime() {
         return time;
     }
+
+    public Comment(String username, String content, String time, int comment_id) {
+        this.username = username;
+        this.content = content;
+        this.time = time;
+        this.comment_id = comment_id;
+    }
+
+    public int getComment_id() {
+        return comment_id;
+    }
+    
+    
 }

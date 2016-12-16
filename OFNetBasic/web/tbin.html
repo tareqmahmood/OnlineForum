@@ -9,12 +9,8 @@ and open the template in the editor.
     <script type="text/javascript">
         function addTextArea()
         {
-            var div = document.getElementById('div_quotes');
-            div.innerHTML += "<form id='replyform' action='AddReply.do' method='post'";
-            div.innerHTML += "<textarea name='new_quote[]'/>";
-            div.innerHTML += "<br>"
-            div.innerHTML += "<input type='submit' value='Reply' onclick=''>";
-            div.innerHTML += "</form>";
+            var div = document.getElementById('div_quotes');            
+            div.innerHTML = '<form id="replyform" action="AddReply.do" method="post"><textarea name="content"></textarea><br><input type="submit" value="Reply" /></form>';
         }
     </script>
 </head>

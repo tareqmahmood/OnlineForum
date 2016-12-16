@@ -13,6 +13,8 @@ public class Category {
     private int category_id;
     private int parent_categoty;
     private String category_name;
+    
+    public static final Category motherCategory = new Category(1, 0, "All Categories");
 
     public Category(int category_id, int parent_categoty, String category_name) {
         this.category_id = category_id;

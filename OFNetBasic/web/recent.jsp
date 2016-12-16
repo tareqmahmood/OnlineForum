@@ -4,6 +4,7 @@
     Author     : HP
 --%>
 
+<%@page import="template.Hierarchy"%>
 <%@page import="template.QuickLink"%>
 <%@page import="model.Post"%>
 <%@page import="java.util.ArrayList"%>
@@ -40,5 +41,7 @@
         %>
         </ul>
         </p>
+        <h3>Filter by category</h3>
+        <% out.print(Hierarchy.getString(session)); %>
     </body>
 </html>
