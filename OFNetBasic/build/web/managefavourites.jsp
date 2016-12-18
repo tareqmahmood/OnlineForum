@@ -31,18 +31,24 @@
         //System.out.println("OFDebug :" + username);
         DataAccess db = DataAccess.getDataAccess(request.getSession());
         ArrayList<Category> categories = db.getAllCategories();
-        ArrayList<String> favouriteCategories = db.getFavouriteCategories(user_id);
-        for(String ctgName : favouriteCategories)
+        ArrayList<Category> favouriteCategories = db.getFavouriteCategories(user_id);
+        %>
+        <form method="post" action="RemoveFavourite.do">
+        <%
+        for(Category ctg : favouriteCategories)
         {
-            out.println(String.format("<li> %s",  ctgName));
+            out.println(String.format("<input type=checkbox name=favouriteCategory value='%d'> %s<br>", ctg.getCategory_id(), ctg.getCategory_name()));
+
         }
         %>
+        <input type="submit" value="Remove" />  
+        </form>
         <h1>Favourites Menu</h1>
         <form method="post" action="AddFavourite.do">
             <%
             for(Category ctg : categories)
             {
-                out.println(String.format("<input type=checkbox name=category value=\"%d\"> %s<br>", ctg.getCategory_id(), ctg.getCategory_name()));
+                out.println(String.format("<input type=checkbox name=category value='%d'> %s<br>", ctg.getCategory_id(), ctg.getCategory_name()));
             }
             %>
             <input type="submit" value="Submit" />  

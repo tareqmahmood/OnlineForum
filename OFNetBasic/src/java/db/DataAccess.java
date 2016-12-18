@@ -155,16 +155,36 @@ public class DataAccess {
         }
     }
     
-    public int addPost(int user_id, String title, String content)
+    public int addPost(int user_id, String title, String content, String[] ctgs)
     {
         try
         {
-            String insertCommand = "insert into posts values(post_id_seq.nextval, ?, ?, SYSDATE, ?)";
-            PreparedStatement stmt = conn.prepareStatement(insertCommand);
-            stmt.setInt(1, user_id);
-            stmt.setString(2, content);
-            stmt.setString(3, title);
+            String sequence = "select POST_ID_SEQ.nextval from dual";
+            PreparedStatement stmt = conn.prepareStatement(sequence);
+            ResultSet rs = stmt.executeQuery();
+            int post_id = 0; 
+                if(rs.next())
+                  post_id = rs.getInt(1);
+            String insertCommand = "insert into posts values(?, ?, ?, SYSDATE, ?)";
+            stmt = conn.prepareStatement(insertCommand);
+            stmt.setInt(1, post_id);
+            stmt.setInt(2, user_id);
+            stmt.setString(3, content);
+            stmt.setString(4, title);
             int count = stmt.executeUpdate();
+            
+            if (ctgs != null) 
+            {
+                for (int i = 0; i < ctgs.length; i++) 
+                {
+                    insertCommand = "insert into post_category values(?, ?)";
+                    stmt = conn.prepareStatement(insertCommand);
+                    stmt.setInt(1, post_id);
+                    stmt.setInt(2, Integer.parseInt(ctgs[i]));
+                    count = stmt.executeUpdate();
+                }
+            }
+            
             return count;
         }
         catch(Exception e)
@@ -436,22 +456,54 @@ public class DataAccess {
             return 0;
         }
     }
-
-    public ArrayList<String> getFavouriteCategories(int user_id)
+    
+    public int removeCategory(int user_id , int category_id)
     {
-        ArrayList<String> favouriteCategories = new ArrayList();
         try
         {
-            String query =  "select c.category_name " + 
+            System.out.println(user_id + " " + category_id);
+            String deleteCommand = "delete from favourites where user_id = ? and category_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(deleteCommand);
+            stmt.setInt(1, user_id);
+            stmt.setInt(2, category_id);
+            int count = stmt.executeUpdate();
+            
+            /*String query =  "select category_id\n" +
+                            "from category\n" +
+                            "where parent_category = ?";
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, category_id);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next())
+            {
+               removeCategory(user_id , rs.getInt(1));
+            }
+            */
+            return count;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+    
+
+    public ArrayList<Category> getFavouriteCategories(int user_id)
+   {
+       ArrayList<Category> favouriteCategories = new ArrayList();
+        try
+        {
+            String query =  "select c.category_id , c.parent_category , c.category_name  " + 
                             "from favourites f, category c " +
                             "where f.user_id = ? and f.category_id = c.category_id";
             PreparedStatement stmt = conn.prepareStatement(query);
-            System.out.println("OFDebug : " + user_id);
+            System.out.println("OFDebug db : " + user_id);
             stmt.setInt(1, user_id);
             ResultSet rs = stmt.executeQuery();
             while(rs.next())
             {
-                favouriteCategories.add(rs.getString(1));
+                favouriteCategories.add(new Category(rs.getInt(1), rs.getInt(2), rs.getString(3)));
             }
             return favouriteCategories;
         }
@@ -460,7 +512,7 @@ public class DataAccess {
             e.printStackTrace();
             return favouriteCategories;
         }
-    }
+   }
     
     
     
@@ -624,4 +676,60 @@ public class DataAccess {
             return 0;
         }
     }
+    
+    public ArrayList<Post> recentCategorisedPosts(int category_id)
+    {
+        ArrayList<Post> posts = new ArrayList();
+        try
+        {
+            String query =  "select post_id, user_id, content, to_char(time, 'dd-mm-yyyy') || ' at ' || to_char(time, 'hh:mi am') datetime, title " +
+                            "from posts\n" +
+                            "where post_id in\n" +
+                            "(select post_id from post_category where category_id = ?)\n" +
+                            "order by time desc";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, category_id);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next())
+            {
+                posts.add(new Post(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5)));
+            }
+            return posts;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    public ArrayList<Post> recentfavouritePosts(int user_id)
+    {
+        ArrayList<Post> posts = new ArrayList();
+        try
+        {
+            String query =  "select post_id, user_id, content, to_char(time, 'dd-mm-yyyy') || ' at ' || to_char(time, 'hh:mi am') datetime, title \n" +
+                            "from posts \n" +
+                            "where post_id in (select POST_ID\n" +
+                            "from post_category\n" +
+                            "where category_id in (select category_id\n" +
+                            "from favourites\n" +
+                            "where user_id = ?))\n" +                           
+                            "order by time desc";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, user_id);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next())
+            {
+                posts.add(new Post(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5)));
+            }
+            return posts;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
 }

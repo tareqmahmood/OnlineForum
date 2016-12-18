@@ -34,14 +34,15 @@ public class AddPost extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String title = request.getParameter("title");
         String content = request.getParameter("content");
+        String[] ctgs = request.getParameterValues("category");
         int user_id = (int) request.getSession().getAttribute("user_id");
         DataAccess db = DataAccess.getDataAccess(request.getSession());
-        int count = db.addPost(user_id, title, content);
+        int count = db.addPost(user_id, title, content, ctgs);
         if(count > 0)
         {
              System.out.println("Successful addition of post");
         }
-        RequestDispatcher rd = request.getRequestDispatcher("home.jsp");
+        RequestDispatcher rd = request.getRequestDispatcher("recent.jsp");
         rd.forward(request, response);
     }
 

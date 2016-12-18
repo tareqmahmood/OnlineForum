@@ -7,19 +7,17 @@ package servelets;
 
 import db.DataAccess;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author HP
+ * @author User
  */
-public class CreateAccount extends HttpServlet {
+public class RemoveFavourite extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,29 +31,20 @@ public class CreateAccount extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String firstName = request.getParameter("firstName");
-        String lastName = request.getParameter("lastName");
-        String email = request.getParameter("email");
-        DataAccess db = DataAccess.getDataAccess(request.getSession());
-        
-        int count = db.creatUser(username, password, firstName, lastName, email);
-        System.out.println("insert executed, rows = " + count);
-        if(count > 0)
+        System.out.println("OFDebug Rc : enter" );
+         DataAccess db = DataAccess.getDataAccess(request.getSession());
+        String[] ctgs = request.getParameterValues("favouriteCategory");
+        if (ctgs != null) 
         {
-            System.out.println("Successful creation of user " + username);
-            HttpSession session = request.getSession();
-            int user_id = db.getUserID(username);
-            session.setAttribute("user_id", new Integer(user_id));
-            RequestDispatcher rd = request.getRequestDispatcher("home.jsp");
-            rd.forward(request, response);
+           for (int i = 0; i < ctgs.length; i++) 
+           {
+               int user_id = (Integer) request.getSession().getAttribute("user_id");
+               int count = db.removeCategory(user_id , Integer.parseInt(ctgs[i]));
+               System.out.println("OFDebug Rc : " + user_id);
+           }
         }
-        else
-        {
-            RequestDispatcher rd = request.getRequestDispatcher("start.jsp");
-            rd.forward(request, response);
-        }
+        RequestDispatcher rd = request.getRequestDispatcher("managefavourites.jsp");
+        rd.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

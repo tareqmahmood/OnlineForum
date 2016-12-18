@@ -20,6 +20,10 @@
         rd.forward(request, response);
     }
     user_id = (Integer) session.getAttribute("user_id");
+    int category_id = 0;
+    if(request.getParameter("category_id") == null) category_id = -1;
+    else category_id = Integer.parseInt(request.getParameter("category_id"));
+    System.out.println("recent : " + category_id);
 %>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -32,7 +36,10 @@
         <%
             DataAccess db = DataAccess.getDataAccess(request.getSession());
             boolean isAdmin = db.isAdmin(user_id);
-            ArrayList<Post> posts = db.recentPosts();
+            ArrayList<Post> posts;
+            
+            if(category_id == -1) posts = db.recentPosts();
+            else posts = db.recentCategorisedPosts(category_id);
             for(Post p : posts)
             {
                 String puser = DataAccess.getDataAccess(request.getSession()).getUsername(p.getUser_id());
