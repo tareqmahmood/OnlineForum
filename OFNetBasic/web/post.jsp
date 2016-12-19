@@ -15,6 +15,14 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
+<style>
+.boxed {
+    width: 300px;
+    border: 1px solid green;
+    padding: 10px;
+    font-size: 13pt
+}
+</style>
 <%
     int user_id = 0;
     if(session.getAttribute("user_id") == null)
@@ -52,16 +60,21 @@
             out.print(QuickLink.quicklinks);
             out.println("<h1>" + post.getTitle() + "</h1>");
             out.println("<h2> by <i>" + postUser + "</i></h2>");
-            out.println("<i>" + post.getDatetime() + "</i><br>");
-            out.println("<p style=\"font-size:13pt\">" + post.getContent() + "</p>");
+            out.println("<i>" + post.getDatetime() + "</i><br><br>");
+            out.println("<div class='boxed'>" + post.getContent() + "</div><br>");
             ArrayList<File> attaList = db.getAttachments(post_id);
             if(attaList.size() > 0)
             {
+                boolean ispaid = db.isPaid(user_id);
                 out.println("<h3>Attachments</h3>");
+                if(!ispaid) out.println("<i><a href='payment.jsp'>upgrade</a> to download attachments</i><br>");
                 out.println("<ul>");
                 for(File f : attaList)
                 {
-                    out.println(String.format("<li><a href='DownloadFile.do?file_id=%d'>%s</a> </li>", f.getFile_id(), f.getFilename()));
+                    if(ispaid)
+                        out.println(String.format("<li><a href='DownloadFile.do?file_id=%d'>%s</a> </li>", f.getFile_id(), f.getFilename()));
+                    else
+                        out.println(String.format("<li>%s</li>", f.getFilename()));
                 }
                 out.println("</ul>");
             }
@@ -84,7 +97,7 @@
         <p>
             <form method="post" action="AddComment.do">
                 <i>Add your comment</i><br>
-                <textarea name="content" cols="40" rows="2"></textarea><br>
+                <textarea name="content" cols="42" rows="2"></textarea><br>
                 <%
                 out.println(String.format("<input type=\"hidden\" name=\"post_id\" value=\"%d\"><br>", post_id));
                 %>

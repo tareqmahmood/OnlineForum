@@ -35,16 +35,20 @@
         for(User u : userList)
         {
             if(u.getUser_id() == user_id)
-                out.println(String.format("<tr><td>%s</td></tr>", u.getUsername()));
+                out.println(String.format("<tr><td>%s</td>"
+                        + "<td></td><td><a href='profile.jsp?profile_id=%d'>View Profile</a></td>"
+                        + "</tr>", u.getUsername(), u.getUser_id()));
             else if(isAdmin)
                 out.println(String.format("<tr><td>%s</td>"
+                        + "<td></td><td><a href='profile.jsp?profile_id=%d'>View Profile</a></td>"
                         + "<td></td><td><a href='conversation.jsp?other_id=%d'>Chat</a></td>"
-                        + "<td></td><td><a href='DeleteUser.do?delete_id=%d'>Delete User</a></td>"
-                        + "</tr>", u.getUsername(), u.getUser_id(), u.getUser_id()));
+                        + "<td></td><td><a href='DeleteUser.do?delete_id=%d' onclick=\"return confirm('Are you sure to delete this user?')\">Delete User</a></td>"
+                        + "</tr>", u.getUsername(), u.getUser_id(), u.getUser_id(), u.getUser_id()));
             else
                 out.println(String.format("<tr><td>%s</td>"
+                        + "<td></td><td><a href='profile.jsp?profile_id=%d'>View Profile</a></td>"
                         + "<td></td><td><a href='conversation.jsp?other_id=%d'>Chat</a></td>"
-                        + "</tr>", u.getUsername(), u.getUser_id()));
+                        + "</tr>", u.getUsername(), u.getUser_id(), u.getUser_id()));
         }
     %>
     </table>

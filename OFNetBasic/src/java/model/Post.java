@@ -46,5 +46,13 @@ public class Post {
         return post_id;
     }  
     
+    public boolean equals(Object another)
+    {
+        return post_id == ((Post)another).getPost_id();
+    }
     
+    public int hashCode()
+    {
+        return post_id;
+    }
 }

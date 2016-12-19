@@ -22,12 +22,12 @@ import model.Category;
 
 public class Hierarchy {
     
-    private static DataAccess db;
+    private static DataAccess db = new DataAccess();
+    private static String code = codeInOrder(Category.motherCategory);
     
-    public static String getString(HttpSession session)
-    {
-        db = (DataAccess) session.getAttribute("db");
-        return codeInOrder(Category.motherCategory);
+    public static String getString()
+    {;
+        return code;
     }
     
     private static String codeInOrder(Category category)

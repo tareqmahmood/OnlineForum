@@ -38,7 +38,7 @@
             boolean isAdmin = db.isAdmin(user_id);
             ArrayList<Post> posts;
             
-            if(category_id == -1) posts = db.recentPosts();
+            if(category_id == -1 || category_id == 1) posts = db.recentPosts();
             else posts = db.recentCategorisedPosts(category_id);
             for(Post p : posts)
             {
@@ -46,7 +46,7 @@
                 if(p.getUser_id() == user_id || isAdmin)
                     out.println(String.format("<tr> <td><a href = 'post.jsp?post_id=%d'>%s</a></td> "
                             + "<td>by <b>%s</b></td><td> on %s</td>"
-                            + "<td><a href='DeletePost.do?post_id=%d' style='padding-left:2em'>Delete Post</a></td>"
+                            + "<td><a href='DeletePost.do?post_id=%d' onclick=\"return confirm('Are you sure to delete this post?')\" style='padding-left:2em'>Delete Post</a></td>"
                             + "</tr>", p.getPost_id(), p.getTitle(), puser, p.getDatetime(), p.getPost_id()));
                 else
                     out.println(String.format("<tr><td><a href = 'post.jsp?post_id=%s'>%s</a></td>"
@@ -56,6 +56,6 @@
         %>
         </table>
         <h3>Filter by category</h3>
-        <% out.print(Hierarchy.getString(session)); %>
+        <% out.print(Hierarchy.getString()); %>
     </body>
 </html>
