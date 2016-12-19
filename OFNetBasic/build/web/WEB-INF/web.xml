@@ -49,6 +49,10 @@
         <servlet-name>RemoveFavourite</servlet-name>
         <servlet-class>servelets.RemoveFavourite</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddCommentVote</servlet-name>
+        <servlet-class>servelets.AddCommentVote</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AddComment</servlet-name>
         <url-pattern>/AddComment.do</url-pattern>
@@ -124,6 +128,10 @@
     <servlet-mapping>
         <servlet-name>RemoveFavourite</servlet-name>
         <url-pattern>/RemoveFavourite.do</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddCommentVote</servlet-name>
+        <url-pattern>/AddCommentVote.do</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

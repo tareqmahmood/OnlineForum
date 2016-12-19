@@ -362,6 +362,44 @@ public class DataAccess {
         }
     }
     
+    public void addCommentVote(int comment_id, int user_id, int vote)
+    {
+        try
+        {
+            String exeCommand = "begin add_comment_vote(?, ?, ?); end;";
+            CallableStatement stmt = conn.prepareCall(exeCommand);
+            stmt.setInt(1, comment_id);
+            stmt.setInt(2, user_id);
+            stmt.setInt(3, vote);
+            stmt.execute();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    
+//    public int getCommentPostID(int comment_id)
+//    {
+//        try
+//        {
+//            String query = "select post_id from post_comment where comment_id = ?";
+//            PreparedStatement stmt = conn.prepareStatement(query);
+//            stmt.setInt(1, comment_id);
+//            ResultSet rs = stmt.executeQuery();
+//            if(rs.next())
+//            {
+//                return rs.getInt(1);
+//            }
+//            return 0;
+//        }
+//        catch(Exception e)
+//        {
+//            e.printStackTrace();
+//            return 0;
+//        }
+//    }
+    
     public Vote getVote(int post_id)
     {
         try
@@ -376,6 +414,32 @@ public class DataAccess {
             query = "select count(vote) from post_votes where vote < 0 and post_id = ?";
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, post_id);
+            rs = stmt.executeQuery();
+            if(rs.next()) downvote = rs.getInt(1);
+            
+            return new Vote(upvote, downvote);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    public Vote getCommentVote(int comment_id)
+    {
+        try
+        {
+            int upvote = 0, downvote = 0;
+            String query = "select count(vote) from comment_votes where vote > 0 and comment_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, comment_id);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()) upvote = rs.getInt(1);
+            
+            query = "select count(vote) from comment_votes where vote < 0 and comment_id = ?";
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, comment_id);
             rs = stmt.executeQuery();
             if(rs.next()) downvote = rs.getInt(1);
             

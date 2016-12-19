@@ -65,7 +65,7 @@
             ArrayList<Comment> commentList = db.getComments(post_id);
             for(Comment c : commentList)
             {
-                IndentedComment.print(c, out, session);
+                IndentedComment.print(c, out, session, post_id);
             }
         %>
         
