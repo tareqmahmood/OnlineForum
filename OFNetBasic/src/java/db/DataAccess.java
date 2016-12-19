@@ -155,7 +155,7 @@ public class DataAccess {
         }
     }
     
-    public int addPost(int user_id, String title, String content, String[] ctgs)
+    public int addPost(int user_id, String title, String content, String[] ctgs, String[] files)
     {
         try
         {
@@ -181,6 +181,18 @@ public class DataAccess {
                     stmt = conn.prepareStatement(insertCommand);
                     stmt.setInt(1, post_id);
                     stmt.setInt(2, Integer.parseInt(ctgs[i]));
+                    count = stmt.executeUpdate();
+                }
+            }
+            
+            if (files != null) 
+            {
+                for (int i = 0; i < files.length; i++) 
+                {
+                    insertCommand = "insert into attachments values(?, ?)";
+                    stmt = conn.prepareStatement(insertCommand);
+                    stmt.setInt(1, post_id);
+                    stmt.setInt(2, Integer.parseInt(files[i]));
                     count = stmt.executeUpdate();
                 }
             }
@@ -235,6 +247,28 @@ public class DataAccess {
         {
             e.printStackTrace();
             return null;
+        }
+    }
+    
+    public ArrayList<File> getAttachments(int post_id)
+    {
+        ArrayList<File> attaList = new ArrayList();
+        try
+        {
+            String query =  "select file_id, filename, filesize from files where file_id in (select file_id from attachments where post_id = ?)";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, post_id);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next())
+            {
+                attaList.add(new File(rs.getInt(1), rs.getString(2), rs.getInt(3)));
+            }
+            return attaList;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return attaList;
         }
     }
     

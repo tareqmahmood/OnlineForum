@@ -35,9 +35,10 @@ public class AddPost extends HttpServlet {
         String title = request.getParameter("title");
         String content = request.getParameter("content");
         String[] ctgs = request.getParameterValues("category");
+        String[] files = request.getParameterValues("file");
         int user_id = (int) request.getSession().getAttribute("user_id");
         DataAccess db = DataAccess.getDataAccess(request.getSession());
-        int count = db.addPost(user_id, title, content, ctgs);
+        int count = db.addPost(user_id, title, content, ctgs, files);
         if(count > 0)
         {
              System.out.println("Successful addition of post");

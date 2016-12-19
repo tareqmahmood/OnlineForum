@@ -4,6 +4,7 @@
     Author     : HP
 --%>
 
+<%@page import="model.File"%>
 <%@page import="template.IndentedComment"%>
 <%@page import="template.QuickLink"%>
 <%@page import="model.Vote"%>
@@ -53,6 +54,17 @@
             out.println("<h2> by <i>" + postUser + "</i></h2>");
             out.println("<i>" + post.getDatetime() + "</i><br>");
             out.println("<p style=\"font-size:13pt\">" + post.getContent() + "</p>");
+            ArrayList<File> attaList = db.getAttachments(post_id);
+            if(attaList.size() > 0)
+            {
+                out.println("<h3>Attachments</h3>");
+                out.println("<ul>");
+                for(File f : attaList)
+                {
+                    out.println(String.format("<li><a href='DownloadFile.do?file_id=%d'>%s</a> </li>", f.getFile_id(), f.getFilename()));
+                }
+                out.println("</ul>");
+            }
             Vote vote = db.getVote(post_id);
         %>
         <form <% out.println(String.format("action=\"AddVote.do?post_id=%d\"", post_id)); %> method="post">

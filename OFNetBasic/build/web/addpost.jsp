@@ -4,6 +4,7 @@
     Author     : HP
 --%>
 
+<%@page import="model.File"%>
 <%@page import="template.QuickLink"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="model.Category"%>
@@ -29,16 +30,27 @@
     <body>
 <p>
 <form method="post" action="AddPost.do">
-    Title <input type="text" name="title" /><br>
-    Type your thoughts <br>
+    <b>Title</b> <input type="text" name="title" /><br><br>
+    <b>Type your thoughts</b> <br>
     <textarea name="content" cols="40" rows="5"></textarea><br>
+    <br><b>Choose category</b><br><br>
     <%
         ArrayList<Category> categories = db.getAllCategories();
         for(Category ctg : categories)
         {
-            out.println(String.format("<input type=\"checkbox\" name=\"category\" value=\"%d\"> %s<br>", ctg.getCategory_id(), ctg.getCategory_name()));
+            out.println(String.format("<input type='checkbox' name='category' value='%d'> %s <br>", ctg.getCategory_id(), ctg.getCategory_name()));
         }
     %>
+    <br><b>Attach files</b><br><br>
+    <%
+        
+        ArrayList<File> fileList = db.getFiles(user_id);
+        for(File f : fileList)
+        {
+            out.println(String.format("<input type='checkbox' name='file' value='%d'> %s <br>", f.getFile_id(), f.getFilename()));
+        }
+    %>
+    <br>
     <input type="submit" value="Post" />
 </form>
 </p>
